@@ -28,9 +28,9 @@
     "use strict";
 
     var css,
-        pluginRegistry  = [
+        pluginRegistry = [
             (function () {
-                var odfMimetypes      = [
+                var odfMimetypes = [
                     'application/vnd.oasis.opendocument.text',
                     'application/vnd.oasis.opendocument.text-flat-xml',
                     'application/vnd.oasis.opendocument.text-template',
@@ -52,32 +52,32 @@
                     'ots'];
 
                 return {
-                    supportsMimetype:      function ( mimetype ) {
+                    supportsMimetype: function (mimetype) {
                         return (odfMimetypes.indexOf(mimetype) !== -1);
                     },
-                    supportsFileExtension: function ( extension ) {
+                    supportsFileExtension: function (extension) {
                         return (odfFileExtensions.indexOf(extension) !== -1);
                     },
-                    path:                  "./ODFViewerPlugin.js",
-                    getClass:              function () {
+                    path: "./ODFViewerPlugin.js",
+                    getClass: function () {
                         return ODFViewerPlugin;
                     }
                 };
             }()),
             {
-                supportsMimetype:      function ( mimetype ) {
+                supportsMimetype: function (mimetype) {
                     return (mimetype === 'application/pdf');
                 },
-                supportsFileExtension: function ( extension ) {
+                supportsFileExtension: function (extension) {
                     return (extension === 'pdf');
                 },
-                path:                  "./PDFViewerPlugin.js",
-                getClass:              function () {
+                path: "./PDFViewerPlugin.js",
+                getClass: function () {
                     return PDFViewerPlugin;
                 }
             },
             (function () {
-                var imageMimetypes      = [
+                var imageMimetypes = [
                     'image/jpeg',
                     'image/pjpeg',
                     'image/gif',
@@ -91,20 +91,20 @@
                     'bmp'];
 
                 return {
-                    supportsMimetype:      function ( mimetype ) {
+                    supportsMimetype: function (mimetype) {
                         return (imageMimetypes.indexOf(mimetype) !== -1);
                     },
-                    supportsFileExtension: function ( extension ) {
+                    supportsFileExtension: function (extension) {
                         return (imageFileExtensions.indexOf(extension) !== -1);
                     },
-                    path:                  "./ImageViewerPlugin.js",
-                    getClass:              function () {
+                    path: "./ImageViewerPlugin.js",
+                    getClass: function () {
                         return ImageViewerPlugin;
                     }
                 };
             }()),
             (function () {
-                var multimediaMimetypes      = [
+                var multimediaMimetypes = [
                     'video/mp4',
                     'video/ogg',
                     'video/webm',
@@ -131,43 +131,43 @@
                     'mp2'];
 
                 return {
-                    supportsMimetype:      function ( mimetype ) {
+                    supportsMimetype: function (mimetype) {
                         return (multimediaMimetypes.indexOf(mimetype) !== -1);
                     },
-                    supportsFileExtension: function ( extension ) {
+                    supportsFileExtension: function (extension) {
                         return (multimediaFileExtensions.indexOf(extension) !== -1);
                     },
-                    path:                  "./MultimediaViewerPlugin.js",
-                    getClass:              function () {
+                    path: "./MultimediaViewerPlugin.js",
+                    getClass: function () {
                         return MultimediaViewerPlugin;
                     }
                 };
             }())
         ],
         unknownFileType = {
-            supportsMimetype:      function () {
+            supportsMimetype: function () {
                 return true;
             },
             supportsFileExtension: function () {
                 return true;
             },
-            path:                  "./UnknownFilePlugin.js",
-            getClass:              function () {
+            path: "./UnknownFilePlugin.js",
+            getClass: function () {
                 return UnknownFilePlugin;
             }
         };
 
-    function estimateTypeByHeaderContentType( documentUrl, cb ) {
-        var xhr                = new XMLHttpRequest();
+    function estimateTypeByHeaderContentType(documentUrl, cb) {
+        var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             var mimetype, matchingPluginData;
-            if ( xhr.readyState === 4 ) {
-                if ( (xhr.status >= 200 && xhr.status < 300) || xhr.status === 0 ) {
+            if (xhr.readyState === 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 0) {
                     mimetype = xhr.getResponseHeader('content-type');
 
-                    if ( mimetype ) {
-                        pluginRegistry.some(function ( pluginData ) {
-                            if ( pluginData.supportsMimetype(mimetype) ) {
+                    if (mimetype) {
+                        pluginRegistry.some(function (pluginData) {
+                            if (pluginData.supportsMimetype(mimetype)) {
                                 matchingPluginData = pluginData;
                                 console.log('Found plugin by mimetype and xhr head: ' + mimetype);
                                 // store the mimetype globally
@@ -178,7 +178,7 @@
                         });
                     }
                 }
-                if ( !matchingPluginData ) {
+                if (!matchingPluginData) {
                     matchingPluginData = unknownFileType;
                 }
                 cb(matchingPluginData);
@@ -188,11 +188,11 @@
         xhr.send();
     }
 
-    function doEstimateTypeByFileExtension( extension ) {
+    function doEstimateTypeByFileExtension(extension) {
         var matchingPluginData;
 
-        pluginRegistry.some(function ( pluginData ) {
-            if ( pluginData.supportsFileExtension(extension) ) {
+        pluginRegistry.some(function (pluginData) {
+            if (pluginData.supportsFileExtension(extension)) {
                 matchingPluginData = pluginData;
                 return true;
             }
@@ -202,10 +202,10 @@
         return matchingPluginData;
     }
 
-    function estimateTypeByFileExtension( extension ) {
+    function estimateTypeByFileExtension(extension) {
         var matchingPluginData = doEstimateTypeByFileExtension(extension)
 
-        if ( matchingPluginData ) {
+        if (matchingPluginData) {
             console.log('Found plugin by parameter type: ' + extension);
 
             // this is needed for the Multimedia Plugin
@@ -215,55 +215,55 @@
         return matchingPluginData;
     }
 
-    function estimateTypeByFileExtensionFromPath( documentUrl ) {
+    function estimateTypeByFileExtensionFromPath(documentUrl) {
         // See to get any path from the url and grep what could be a file extension
-        var documentPath       = documentUrl.split('?')[0],
-            extension          = documentPath.split('.').pop(),
+        var documentPath = documentUrl.split('?')[0],
+            extension = documentPath.split('.').pop(),
             matchingPluginData = doEstimateTypeByFileExtension(extension)
 
-        if ( matchingPluginData ) {
+        if (matchingPluginData) {
             console.log('Found plugin by file extension from path: ' + extension);
         }
 
         return matchingPluginData;
     }
 
-    function parseSearchParameters( location ) {
+    function parseSearchParameters(location) {
         var parameters = {},
-            search     = location.search || "?";
+            search = location.search || "?";
 
-        search.substr(1).split('&').forEach(function ( q ) {
+        search.substr(1).split('&').forEach(function (q) {
             // skip empty strings
-            if ( !q ) {
+            if (!q) {
                 return;
             }
             // if there is no '=', have it handled as if given key was set to undefined
-            var s                                = q.split('=', 2);
+            var s = q.split('=', 2);
             parameters[decodeURIComponent(s[0])] = decodeURIComponent(s[1]);
         });
 
         return parameters;
     }
 
-    function getMimeByExtension( ext ) {
+    function getMimeByExtension(ext) {
         var extToMimes = {
-            'aac':  'audio/aac',
-            'mp4':  'video/mp4',
-            'm4a':  'audio/mp4',
-            'mp3':  'audio/mpeg',
-            'mpg':  'video/mpeg',
+            'aac': 'audio/aac',
+            'mp4': 'video/mp4',
+            'm4a': 'audio/mp4',
+            'mp3': 'audio/mpeg',
+            'mpg': 'video/mpeg',
             'mpeg': 'video/mpeg',
-            'ogg':  'video/ogg',
-            'wav':  'audio/wav',
+            'ogg': 'video/ogg',
+            'wav': 'audio/wav',
             'webm': 'video/webm',
-            'm4v':  'video/mp4',
-            'ogv':  'video/ogg',
-            'oga':  'audio/ogg',
-            'mp1':  'audio/mpeg',
-            'mp2':  'audio/mpeg'
+            'm4v': 'video/mp4',
+            'ogv': 'video/ogg',
+            'oga': 'audio/ogg',
+            'mp1': 'audio/mpeg',
+            'mp2': 'audio/mpeg'
         };
 
-        if ( extToMimes.hasOwnProperty(ext) ) {
+        if (extToMimes.hasOwnProperty(ext)) {
             return extToMimes[ext];
         }
         return false;
@@ -272,21 +272,29 @@
     window.onload = function () {
         var viewer,
             documentUrl = document.location.hash.substring(1),
-            parameters  = parseSearchParameters(document.location),
+            parameters = parseSearchParameters(document.location),
             Plugin;
 
-        if ( documentUrl ) {
+        if (parameters.print == 'false') {
+            this.document.getElementById('print').style.display = 'none';
+        }
+
+        if (parameters.download == 'false') {
+            this.document.getElementById('download').style.display = 'none';
+        }
+
+        if (documentUrl) {
             // try to guess the title as filename from the location, if not set by parameter
-            if ( !parameters.title ) {
+            if (!parameters.title) {
                 parameters.title = documentUrl.replace(/^.*[\\\/]/, '');
             }
 
             parameters.documentUrl = documentUrl;
 
             // trust the server most
-            estimateTypeByHeaderContentType(documentUrl, function ( pluginData ) {
-                if ( !pluginData ) {
-                    if ( parameters.type ) {
+            estimateTypeByHeaderContentType(documentUrl, function (pluginData) {
+                if (!pluginData) {
+                    if (parameters.type) {
                         pluginData = estimateTypeByFileExtension(parameters.type);
                     } else {
                         // last ressort: try to guess from path
@@ -294,8 +302,8 @@
                     }
                 }
 
-                if ( pluginData ) {
-                    if ( String(typeof loadPlugin) !== "undefined" ) {
+                if (pluginData) {
+                    if (String(typeof loadPlugin) !== "undefined") {
                         loadPlugin(pluginData.path, function () {
                             Plugin = pluginData.getClass();
                             viewer = new Viewer(new Plugin(), parameters);

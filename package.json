@@ -1,45 +1,54 @@
 {
-  "name"           : "node-viewerjs",
-  "author"         : "KO GmbH <http://www.kogmbh.com/>",
-  "description"    : "Document viewer component for PDF and ODF documents. Done with just HTML5, CSS3, and JavaScript. Powered by pdf.js and WebODF.",
-  "version"        : "0.7.1",
-  "contributors"   : [
+  "name": "node-viewerjs",
+  "author": "KO GmbH <http://www.kogmbh.com/>",
+  "description": "Document viewer component for PDF and ODF documents. Done with just HTML5, CSS3, and JavaScript. Powered by pdf.js and WebODF.",
+  "version": "0.7.1",
+  "contributors": [
     {
       "name": "KO GmbH",
       "site": "http://viewerjs.org/"
     },
     {
-      "name" : "Jeffrey van Norden",
+      "name": "Jeffrey van Norden",
       "email": "jeffrey@grexx.net"
     }
   ],
-  "license"        : "AGPL-3.0",
-  "keywords"       : [
-    "OpenDocument", "ODF", "PDF",
-    "Text", "Document", "Slides", "Presentation",
-    "ODT", "OTT", "FODT",
-    "ODP", "OTP", "FODP",
+  "license": "AGPL-3.0",
+  "keywords": [
+    "OpenDocument",
+    "ODF",
+    "PDF",
+    "Text",
+    "Document",
+    "Slides",
+    "Presentation",
+    "ODT",
+    "OTT",
+    "FODT",
+    "ODP",
+    "OTP",
+    "FODP",
     "Viewer"
   ],
-  "scripts"        : {
+  "scripts": {
     "build": "node ./build/build.js",
-    "test" : "node ./test/server.js"
+    "test": "node ./test/server.js"
   },
-  "main"           : "./release/index.html",
-  "repository"     : {
+  "main": "./release/index.html",
+  "repository": {
     "type": "git",
-    "url" : "git://github.com/vandernorth/ViewerJS.git"
+    "url": "git://github.com/vandernorth/ViewerJS.git"
   },
-  "dependencies"   : {
-    "pdfjs-dist" : "1.8",
+  "dependencies": {
+    "pdfjs-dist": "1.8",
     "node-webodf": "0.5.11"
   },
   "devDependencies": {
     "browserify": "^13",
-    "shelljs"   : "^0",
-    "express"   : "^4.1"
+    "shelljs": "^0",
+    "express": "^4.1"
   },
-  "engines"        : {
+  "engines": {
     "node": ">=4.1.2"
   }
 }
